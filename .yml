@@ -1,0 +1,36 @@
+# Node.js Web App Pipeline
+# Build, test, and publish artifacts for a JavaScript web app.
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildDir: 'dist'  # Set to 'build' if using React, or appropriate directory for your framework
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x' # Use the Node.js version compatible with your app
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+  displayName: 'Install dependencies'
+
+- script: |
+    npm run build
+  displayName: 'Build app'
+
+- script: |
+    npm test
+  displayName: 'Run tests'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)/$(buildDir)'
+    ArtifactName: 'webapp'
+    publishLocation: 'Container'
+  displayName: 'Publish build artifacts'
