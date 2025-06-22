@@ -1,19 +1,19 @@
-# Node.js Web App Pipeline
-# Build, test, and publish artifacts for a JavaScript web app.
+# Node.js Web App - Windows Agent
+# Build, test, and publish JavaScript app on Windows
 
 trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 variables:
-  buildDir: 'dist'  # Set to 'build' if using React, or appropriate directory for your framework
+  buildDir: 'build'  # change to 'dist' or 'dist/project-name' if using Angular or Vue
 
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '18.x' # Use the Node.js version compatible with your app
+    versionSpec: '18.x'  # Adjust version as needed
   displayName: 'Install Node.js'
 
 - script: |
@@ -22,7 +22,7 @@ steps:
 
 - script: |
     npm run build
-  displayName: 'Build app'
+  displayName: 'Build application'
 
 - script: |
     npm test
@@ -30,7 +30,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)/$(buildDir)'
+    PathtoPublish: '$(Build.SourcesDirectory)\$(buildDir)'
     ArtifactName: 'webapp'
     publishLocation: 'Container'
   displayName: 'Publish build artifacts'
